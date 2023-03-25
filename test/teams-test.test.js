@@ -4,8 +4,8 @@ const { beforeEach } = require('mocha');
 chai.use(chaiHttp);
 
 const app = require('../app').app;
-const usersController = require('../controllers/users');
-const teamsController = require('../controllers/teams.js');
+const usersController = require('../auth/users.controller');
+const teamsController = require('../teams/teams.controller.js');
 
 
 before((done) => {
@@ -29,6 +29,7 @@ describe('Suite de pruebas de teams', () => {
             .send({user: 'julito', password: '1234'})
             .end((err, res) => {
                 let token = res.body.token;
+                console.log(res.body.user);
                 // se espera el login exitoso
                 chai.assert.equal(res.statusCode, 200);
                 chai.request(app)
@@ -118,7 +119,6 @@ describe('Suite de pruebas de teams', () => {
                                 .end((err, res) => {
                                     // tiene equipo con Charizard y Blastoise
                                     // ( {trainer : 'julito', team : []})
-                                    console.log(res.body.team);
                                     chai.assert.equal(res.statusCode, 200);
                                     chai.assert.equal(res.body.trainer, 'julito');
                                     chai.assert.equal(res.body.team[0].name, team[1].name);

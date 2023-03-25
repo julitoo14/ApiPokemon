@@ -25,7 +25,6 @@ const cleanUpTeams = () => {
 const removePokemon = (userId, pokeid) => {
     pokemon = teamsDatabase[userId][pokeid];
     teamsDatabase[userId].splice(pokeid, 1);
-    console.log('Removed '+ pokemon.name + ' from index ' + pokeid);
 }
 
 exports.setTeam = setTeam;

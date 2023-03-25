@@ -1,7 +1,8 @@
 const JwtStrategy = require('passport-jwt').Strategy;
     ExtractJwt = require('passport-jwt').ExtractJwt;
+const passport = require('passport');
 
-module.exports = passport => {
+const init = () => {
     const opts = {
         jwtFromRequest: ExtractJwt.fromAuthHeaderWithScheme('jwt'),
         secretOrKey: 'secretPassword' // esta contrasenia deberia estar en una variable de entorno
@@ -11,3 +12,13 @@ module.exports = passport => {
         return done(null, decoded);
     }));
 }
+
+const protectWithJwt = (req, res, next) => {
+    if(req.path == '/' || req.path == '/auth/login'){
+        return next();
+    }
+    return passport.authenticate('jwt', {session: false})(req, res, next);
+}
+
+exports.init = init;
+exports.protectWithJwt = protectWithJwt;
