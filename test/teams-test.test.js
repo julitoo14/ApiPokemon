@@ -14,9 +14,8 @@ before((done) => {
     done();
 });
 
-afterEach((done) => {
-    teamsController.cleanUpTeams();
-    done();
+afterEach(async () => {
+    await teamsController.cleanUpTeams();
 })
 
 describe('Suite de pruebas de teams', () => { 
@@ -123,6 +122,53 @@ describe('Suite de pruebas de teams', () => {
                                     chai.assert.equal(res.body.trainer, 'julito');
                                     chai.assert.equal(res.body.team[0].name, team[1].name);
                                     chai.assert.equal(res.body.team.length, 1);
+                                    done();
+                                });
+
+                            });
+                    });
+            });     
+    });
+
+
+    it("shouldn't be able to add more than 6 pokemon ", (done) => {
+        let team = [
+            {name: 'Charizard'},
+            {name: 'Blastoise'},
+            {name: 'Pikachu'},
+            {name: 'Squirtle'},
+            {name: 'Evee'},
+            {name: 'Charmander'}
+        ];
+        chai.request(app)
+            .post('/auth/login')
+            .set('content-type', 'application/json')
+            .send({user: 'julito', password: '1234'})
+            .end((err, res) => {
+                let token = res.body.token;
+                // se espera el login exitoso
+                chai.assert.equal(res.statusCode, 200);
+                chai.request(app)
+                    .put('/teams')
+                    .send({
+                        team: team
+                    })
+                    .set('Authorization', `JWT ${token}`)
+                    .end((err, res) => {
+                        chai.assert.equal(res.statusCode,200);
+                        chai.request(app)
+                            .put('/teams')
+                            .set('Authorization', `JWT ${token}`)
+                            .end((err, res) => {
+                                chai.assert.equal(res.statusCode,200);
+                                chai.request(app)
+                                .post('/teams/pokemons')
+                                .send({name: 'Rattata'})
+                                .set('Authorization', `JWT ${token}`)
+                                .end((err, res) => {
+                                    // tiene equipo con Charizard y Blastoise
+                                    // ( {trainer : 'julito', team : []})
+                                    chai.assert.equal(res.statusCode, 400);
                                     done();
                                 });
 
