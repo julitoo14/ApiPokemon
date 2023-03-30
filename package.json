@@ -4,7 +4,7 @@
   "description": "API pokemon",
   "main": "app.js",
   "scripts": {
-    "test": "./node_modules/.bin/mocha" 
+    "test": "./node_modules/.bin/mocha"
   },
   "author": "Shawz",
   "license": "ISC",
@@ -14,6 +14,7 @@
     "express": "^4.18.2",
     "jsonwebtoken": "^9.0.0",
     "moment": "^2.29.4",
+    "mongoose": "^7.0.3",
     "passport": "^0.6.0",
     "passport-jwt": "^4.0.1",
     "uuid": "^9.0.0"

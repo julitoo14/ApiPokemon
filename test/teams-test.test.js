@@ -8,14 +8,14 @@ const usersController = require('../auth/users.controller');
 const teamsController = require('../teams/teams.controller.js');
 
 
-before((done) => {
-    usersController.registerUser('julito', '1234');
-    usersController.registerUser('mile', '1234');
-    done();
+beforeEach(async () => {
+    await usersController.registerUser('julito', '1234');
+    await usersController.registerUser('mile', '1234');
 });
 
 afterEach(async () => {
     await teamsController.cleanUpTeams();
+    await usersController.cleanUpUsers();
 })
 
 describe('Suite de pruebas de teams', () => { 
@@ -28,7 +28,6 @@ describe('Suite de pruebas de teams', () => {
             .send({user: 'julito', password: '1234'})
             .end((err, res) => {
                 let token = res.body.token;
-                console.log(res.body.user);
                 // se espera el login exitoso
                 chai.assert.equal(res.statusCode, 200);
                 chai.request(app)
@@ -179,8 +178,3 @@ describe('Suite de pruebas de teams', () => {
 
 
 });
-
-after((done) => {
-    usersController.cleanUpUsers();
-    done();
-})

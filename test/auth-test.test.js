@@ -3,13 +3,19 @@ const chaiHttp = require('chai-http');
 chai.use(chaiHttp);
 const app = require('../app').app;
 const usersController = require('../auth/users.controller');
+const teamsController = require('../teams/teams.controller');
 
 
-before((done) => {
-    usersController.registerUser('julito', '1234');
-    usersController.registerUser('mile', '1234');
-    done();
+beforeEach(async () => {
+    await usersController.registerUser('julito', '1234');
+    await usersController.registerUser('mile', '1234');
 });
+
+afterEach(async () => {
+    await teamsController.cleanUpTeams();
+    await usersController.cleanUpUsers();
+})
+
 
 describe('Suite de pruebas auth' , () => {
     it('should return 401 when no jwt token available', (done) => {
@@ -45,7 +51,3 @@ describe('Suite de pruebas auth' , () => {
 
 })
 
-after((done) => {
-    usersController.cleanUpUsers();
-    done();
-})
