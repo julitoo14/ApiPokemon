@@ -27,6 +27,7 @@ const registerUser = (userName, password) =>{
 
 }
 
+registerUser('julito', '1234');
 
 const cleanUpUsers = () => {
     return new Promise(async (resolve, reject) =>{
